@@ -4,25 +4,40 @@ namespace App\Http\Controllers\v1;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\TokenResource;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
-
-use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
 {
     public function login(Request $request)
     {
-        Log::info("Entrou");
+        $validator = Validator::make($request->all(), [
+            "email" => [
+                "required",
+                "email"
+            ],
+            "password" => [
+                "required",
+            ],
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+
         $credentials = $request->only("email", "password");
 
         if (!$token = auth('api')->attempt($credentials)) {
             return response()->json(
-                ['error' => 'Unauthorized'],
+                ['errors' => [
+                    'auth' => [
+                        'Unauthorized'
+                    ],
+                ]],
                 401
             );
         }
-        
+
         return response()->json(
             ['data' => new TokenResource($token)],
             201
