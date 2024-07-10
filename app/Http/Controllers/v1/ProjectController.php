@@ -4,24 +4,22 @@ namespace App\Http\Controllers\v1;
 
 use App\Http\Controllers\Controller;
 use App\Models\Project;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class ProjectController extends Controller
 {
+    protected $user;
+
+    public function __construct(){
+        $this->user = User::find(auth('api')->user()->id);
+    }
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
+        return $this->user->projects()->get();
     }
 
     /**
@@ -36,14 +34,6 @@ class ProjectController extends Controller
      * Display the specified resource.
      */
     public function show(Project $project)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Project $project)
     {
         //
     }

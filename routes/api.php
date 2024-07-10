@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\v1\AuthController;
+use App\Http\Controllers\v1\ProjectController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -24,6 +25,7 @@ Route::prefix("/")->group(function () {
         Route::post('refresh', [AuthController::class, 'refresh'])->name('refresh');
 
         Route::prefix('projects')->group(function () {
+            Route::get('/', [ProjectController::class, 'index'])->name('project.index');
 
             Route::prefix('{project_id}/tasks')->group(function () {
                 

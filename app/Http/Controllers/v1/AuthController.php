@@ -6,12 +6,14 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\TokenResource;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
-use Tymon\JWTAuth\Exceptions\UserNotDefinedException;
+
+use Illuminate\Support\Facades\Log;
 
 class AuthController extends Controller
 {
     public function login(Request $request)
     {
+        Log::info("Entrou");
         $credentials = $request->only("email", "password");
 
         if (!$token = auth('api')->attempt($credentials)) {
@@ -20,9 +22,9 @@ class AuthController extends Controller
                 401
             );
         }
-
+        
         return response()->json(
-            new TokenResource($token),
+            ['data' => new TokenResource($token)],
             201
         );
     }
@@ -55,3 +57,12 @@ class AuthController extends Controller
         );
     }
 }
+
+// return response()->json(
+//     ['data' => [
+//         'token' => $token,
+//         'token_typ' => 'bearer',
+//         'expires_in' => auth('api')->factory()->getTTL() * 60
+//     ]],
+//     200
+// );

@@ -16,4 +16,11 @@ class Project extends Model
         'start_date',
         'end_date',
     ];
+
+    // User
+    
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

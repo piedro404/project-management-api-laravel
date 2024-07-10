@@ -7,6 +7,13 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 class TokenResource extends JsonResource
 {
+    protected $token;
+    
+    public function __construct($token)
+    {
+        $this->token = $token;
+    }
+
     /**
      * Transform the resource into an array.
      *
