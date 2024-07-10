@@ -17,4 +17,18 @@ class Task extends Model
         'start_date',
         'end_date',
     ];
+
+    // User
+    
+    public function user()
+    {
+        return $this->project->user;
+    }
+
+    // Project
+
+    public function project()
+    {
+        return $this->belongsTo(Project::class);
+    }
 }
