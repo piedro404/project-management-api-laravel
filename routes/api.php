@@ -1,8 +1,10 @@
 <?php
 
-use App\Http\Controllers\v1\AuthController;
-use App\Http\Controllers\v1\ProjectController;
-use Illuminate\Http\Request;
+use App\Http\Controllers\v1\{
+    AuthController,
+    ProjectController,
+    TaskController,
+};
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -32,7 +34,7 @@ Route::prefix("/")->group(function () {
             Route::delete('/{id}', [ProjectController::class, 'destroy'])->name('project.destroy');
 
             Route::prefix('{project_id}/tasks')->group(function () {
-                
+                Route::get('/', [TaskController::class, 'index'])->name('task.index');
             });
         });
     });

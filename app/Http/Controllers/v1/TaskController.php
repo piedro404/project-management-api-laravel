@@ -4,24 +4,24 @@ namespace App\Http\Controllers\v1;
 
 use App\Http\Controllers\Controller;
 use App\Models\Task;
+use App\Models\User;
 use Illuminate\Http\Request;
 
-class TasksController extends Controller
+class TaskController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    protected $user;
+
+    public function __construct()
     {
-        //
+        $this->user = User::find(auth('api')->user()->id);
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Display a listing of the resource.
      */
-    public function create()
+    public function index($project_id)
     {
-        //
+        return $this->user->projects->find($project_id)->tasks()->get();
     }
 
     /**
@@ -36,14 +36,6 @@ class TasksController extends Controller
      * Display the specified resource.
      */
     public function show(Task $task)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Task $task)
     {
         //
     }
