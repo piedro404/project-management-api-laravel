@@ -3,28 +3,15 @@
 namespace App\Http\Controllers\v1;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\TokenRequest;
 use App\Http\Resources\TokenResource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
 {
-    public function login(Request $request)
+    public function login(TokenRequest $request)
     {
-        $validator = Validator::make($request->all(), [
-            "email" => [
-                "required",
-                "email"
-            ],
-            "password" => [
-                "required",
-            ],
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 422);
-        }
-
         $credentials = $request->only("email", "password");
 
         if (!$token = auth('api')->attempt($credentials)) {
