@@ -20,7 +20,7 @@ class ProjectFactory extends Factory
         return [
             'user_id' => User::all()->random()->id,
             'title' => $this->faker->sentence,
-            'description' => $this->faker->paragraph(3),
+            'description' => $this->faker->paragraph(1),
             'start_date' => now(),
             'end_date'=> now()->addDays(7),
         ];

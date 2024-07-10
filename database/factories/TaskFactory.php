@@ -21,7 +21,7 @@ class TaskFactory extends Factory
         return [
             'project_id' => Project::all()->random()->id,
             'title' => $this->faker->sentence(3),
-            'description' => $this->faker->paragraph(3),
+            'description' => $this->faker->paragraph(1),
             'status' => $status,
             'start_date' => now(),
             'end_date'=> now()->addDays(7),
