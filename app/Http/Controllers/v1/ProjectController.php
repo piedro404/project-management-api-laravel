@@ -4,9 +4,7 @@ namespace App\Http\Controllers\v1;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ProjectRequest;
-use App\Models\Project;
 use App\Models\User;
-use Illuminate\Http\Request;
 
 class ProjectController extends Controller
 {
@@ -63,12 +61,27 @@ class ProjectController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Project $project)
+    public function update(ProjectRequest $request, int $id)
     {
-        $this->user->projects()->create($request->all());
+        if (!$project = $this->user->projects()->find($id)) {
+            return response()->json(
+                [
+                    'errors' =>
+                    [
+                        'project' =>
+                        [
+                            "No project found with ID {$id} for the current user."
+                        ],
+                    ]
+                ],
+                404
+            );
+        }
+
+        $project->update($request->all());
 
         return response()->json(
-            ['message' => 'Successfully created project'],
+            ['message' => 'Successfully update project'],
             201
         );
     }
@@ -76,8 +89,28 @@ class ProjectController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Project $project)
+    public function destroy(int $id)
     {
-        //
+        if (!$project = $this->user->projects()->find($id)) {
+            return response()->json(
+                [
+                    'errors' =>
+                    [
+                        'project' =>
+                        [
+                            "No project found with ID {$id} for the current user."
+                        ],
+                    ]
+                ],
+                404
+            );
+        }
+
+        $project->delete();
+
+        return response()->json(
+            ['message' => 'Successfully delete project'],
+            201
+        );
     }
 }

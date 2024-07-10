@@ -28,6 +28,8 @@ Route::prefix("/")->group(function () {
             Route::get('/', [ProjectController::class, 'index'])->name('project.index');
             Route::get('/{id}', [ProjectController::class, 'show'])->name('project.show');
             Route::post('/', [ProjectController::class, 'store'])->name('project.store');
+            Route::put('/{id}', [ProjectController::class, 'update'])->name('project.update');
+            Route::delete('/{id}', [ProjectController::class, 'destroy'])->name('project.destroy');
 
             Route::prefix('{project_id}/tasks')->group(function () {
                 
