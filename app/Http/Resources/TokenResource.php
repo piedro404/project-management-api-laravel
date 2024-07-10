@@ -15,7 +15,9 @@ class TokenResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            
+            'token' => $this->token,
+            'token_typ' => 'bearer',
+            'expires_in' => auth('api')->factory()->getTTL() * 60
         ];
     }
 }

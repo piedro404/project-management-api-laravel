@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\v1\AuthController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -15,9 +16,18 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::prefix("/")->group(function () {
-    Route::post('login', 'V1/AuthController@login')->name('login');
+    Route::post('login', [AuthController::class, 'login'])->name('login');
     
     Route::middleware('auth:api')->group(function () {
-        Route::post('me','V1/AuthController@me')->name('me');
+        Route::post('me', [AuthController::class, 'me'])->name('me');
+        Route::post('logout', [AuthController::class, 'logout'])->name('logout');
+        Route::post('refresh', [AuthController::class, 'refresh'])->name('refresh');
+
+        Route::prefix('projects')->group(function () {
+
+            Route::prefix('{project_id}/tasks')->group(function () {
+                
+            });
+        });
     });
 });

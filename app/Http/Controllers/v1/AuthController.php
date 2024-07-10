@@ -1,9 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\v1;
 
+use App\Http\Controllers\Controller;
+use App\Http\Resources\TokenResource;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use Tymon\JWTAuth\Exceptions\UserNotDefinedException;
 
 class AuthController extends Controller
 {
@@ -19,12 +22,8 @@ class AuthController extends Controller
         }
 
         return response()->json(
-            ['data' => [
-                'token' => $token,
-                'token_typ' => 'bearer',
-                'expires_in' => auth('api')->factory()->getTTL() * 60
-            ]],
-            200
+            new TokenResource($token),
+            201
         );
     }
 
@@ -51,12 +50,8 @@ class AuthController extends Controller
         $token = auth('api')->refresh();
 
         return response()->json(
-            ['data' => [
-                'token' => $token,
-                'token_typ' => 'bearer',
-                'expires_in' => auth('api')->factory()->getTTL() * 60
-            ]],
-            200
+            new TokenResource($token),
+            201
         );
     }
 }
