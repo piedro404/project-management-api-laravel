@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 
 class AuthController extends Controller
@@ -10,7 +11,7 @@ class AuthController extends Controller
     {
         $credentials = $request->only("email", "password");
 
-        if (!$token = auth("api")->attempt($credentials)) {
+        if (!$token = auth('api')->attempt($credentials)) {
             return response()->json(
                 ['error' => 'Unauthorized'],
                 401
@@ -18,8 +19,44 @@ class AuthController extends Controller
         }
 
         return response()->json(
-            ['data' => auth()->user()],
-            0
+            ['data' => [
+                'token' => $token,
+                'token_typ' => 'bearer',
+                'expires_in' => auth('api')->factory()->getTTL() * 60
+            ]],
+            200
+        );
+    }
+
+    public function me()
+    {
+        return response()->json(
+            ['data' => auth('api')->user()],
+            200
+        );
+    }
+
+    public function logout()
+    {
+        auth('api')->logout();
+
+        return response()->json(
+            ['message' => 'Successfully logged out'],
+            200
+        );
+    }
+
+    public function refresh()
+    {
+        $token = auth('api')->refresh();
+
+        return response()->json(
+            ['data' => [
+                'token' => $token,
+                'token_typ' => 'bearer',
+                'expires_in' => auth('api')->factory()->getTTL() * 60
+            ]],
+            200
         );
     }
 }
