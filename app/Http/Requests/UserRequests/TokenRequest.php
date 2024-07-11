@@ -38,10 +38,23 @@ class TokenRequest extends FormRequest
 
     public function failedValidation(Validator $validator)
     {
-        $errors = $validator->errors();
+        if ($this->isMethod('get')) {
+            throw new HttpResponseException(
+                response()->json(
+                    ['errors' => [
+                        'auth' => [
+                            'Token missing or expired'
+                        ],
+                    ]],
+                    401
+                )
+            );
+        } else if ($this->isMethod('post')) {
+            $errors = $validator->errors();
 
-        throw new HttpResponseException(
-            response()->json(['errors' => $errors], 422)
-        );
+            throw new HttpResponseException(
+                response()->json(['errors' => $errors], 422)
+            );
+        }
     }
 }

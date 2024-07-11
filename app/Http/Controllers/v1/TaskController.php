@@ -2,26 +2,18 @@
 
 namespace App\Http\Controllers\v1;
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\AuthenticatedController;
 use App\Http\Requests\TaskRequest;
 use App\Http\Resources\TaskResource;
-use App\Models\User;
 use App\Traits\{
     ProjectTrait,
     TaskTrait,
 };
 
-class TaskController extends Controller
+class TaskController extends AuthenticatedController
 {
     use ProjectTrait;
     use TaskTrait;
-    
-    protected $user;
-
-    public function __construct()
-    {
-        $this->user = User::find(auth('api')->user()->id);
-    }
 
     /**
      * Display a listing of the resource.

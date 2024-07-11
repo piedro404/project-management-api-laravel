@@ -2,25 +2,18 @@
 
 namespace App\Http\Controllers\v1;
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\AuthenticatedController;
 use App\Http\Requests\ProjectRequest;
 use App\Http\Resources\{
     ProjectCollectionResource,
     ProjectResource,
 };
 use App\Traits\ProjectTrait;
-use App\Models\User;
 
-class ProjectController extends Controller
+class ProjectController extends AuthenticatedController
 {
     use ProjectTrait;
 
-    protected $user;
-
-    public function __construct()
-    {
-        $this->user = User::find(auth('api')->user()->id);
-    }
     /**
      * Display a listing of the resource.
      */
