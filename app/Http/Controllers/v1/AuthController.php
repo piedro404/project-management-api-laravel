@@ -12,6 +12,7 @@ use App\Http\Resources\{
     UserResource,
     TokenResource,
 };
+use App\Http\Resources\TaskResource;
 use App\Models\User;
 
 class AuthController extends Controller
@@ -116,13 +117,23 @@ class AuthController extends Controller
             201
         );
     }
-}
 
-// return response()->json(
-//     ['data' => [
-//         'token' => $token,
-//         'token_typ' => 'bearer',
-//         'expires_in' => auth('api')->factory()->getTTL() * 60
-//     ]],
-//     200
-// );
+    public function tasks_description()
+    {
+        $user = User::find(auth('api')->user()->id);
+
+        $tasks_pending = $user->tasks()->searchStatus(0)->get();
+        $tasks_progress = $user->tasks()->searchStatus(1)->get();
+        $tasks_concluded = $user->tasks()->searchStatus(2)->get();
+
+        return response()->json(
+            [
+                'data' => [
+                    'tasks_pending'=> TaskResource::collection($tasks_pending),
+                    'tasks_progress'=> TaskResource::collection($tasks_progress),
+                    'tasks_concluded'=> TaskResource::collection($tasks_concluded),
+                ],
+            ], 
+            200);
+    }
+}
