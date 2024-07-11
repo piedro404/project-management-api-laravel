@@ -31,4 +31,10 @@ class Task extends Model
     {
         return $this->belongsTo(Project::class);
     }
+
+    // Repositories
+    public function scopeSearchStatus($query, int $status)
+    {
+        return $query->where('status', $status)->orderBy('end_date','asc');
+    }
 }
