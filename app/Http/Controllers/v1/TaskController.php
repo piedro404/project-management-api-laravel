@@ -64,16 +64,56 @@ class TaskController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Task $task)
+    public function update(TaskRequest $request, int $project_id, int $id)
     {
-        //
+        if (!$task = $this->user->projects->find($project_id)->tasks()->find($id)) {
+            return response()->json(
+                [
+                    'errors' =>
+                    [
+                        'task' =>
+                        [
+                            "No task found with ID {$id} for the current project."
+                        ],
+                    ]
+                ],
+                404
+            );
+        }
+
+        $task->update($request->all());
+
+        return response()->json(
+            ['message' => 'Successfully update tasks'],
+            201
+        );
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Task $task)
+    public function destroy(int $project_id, int $id)
     {
-        //
+        if (!$task = $this->user->projects->find($project_id)->tasks()->find($id)) {
+            return response()->json(
+                [
+                    'errors' =>
+                    [
+                        'task' =>
+                        [
+                            "No task found with ID {$id} for the current project."
+                        ],
+                    ]
+                ],
+                404
+            );
+        }
+
+        $task->delete();
+
+        return response()->json(
+            ['message' => 'Successfully delete tasks'],
+            201
+        );
     }
 }
