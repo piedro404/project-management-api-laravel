@@ -4,6 +4,8 @@ namespace App\Http\Controllers\v1;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ProjectRequest;
+use App\Http\Resources\ProjectCollectionResource;
+use App\Http\Resources\ProjectResource;
 use App\Models\User;
 
 class ProjectController extends Controller
@@ -19,7 +21,7 @@ class ProjectController extends Controller
      */
     public function index()
     {
-        return $this->user->projects()->get();
+        return ProjectCollectionResource::collection($this->user->projects()->get()->load('tasks'));
     }
 
     /**
@@ -55,7 +57,7 @@ class ProjectController extends Controller
             );
         }
 
-        return $project;
+        return new ProjectResource($project->load("tasks"));
     }
 
     /**

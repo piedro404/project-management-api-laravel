@@ -4,9 +4,8 @@ namespace App\Http\Controllers\v1;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\TaskRequest;
-use App\Models\Task;
+use App\Http\Resources\TaskResource;
 use App\Models\User;
-use Illuminate\Http\Request;
 
 class TaskController extends Controller
 {
@@ -22,7 +21,7 @@ class TaskController extends Controller
      */
     public function index(int $project_id)
     {
-        return $this->user->projects->find($project_id)->tasks()->get();
+        return TaskResource::collection($this->user->projects->find($project_id)->tasks()->get());
     }
 
     /**
@@ -58,7 +57,7 @@ class TaskController extends Controller
             );
         }
 
-        return $task;
+        return new TaskResource($task);
     }
 
     /**
