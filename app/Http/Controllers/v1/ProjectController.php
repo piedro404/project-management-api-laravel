@@ -4,12 +4,17 @@ namespace App\Http\Controllers\v1;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ProjectRequest;
-use App\Http\Resources\ProjectCollectionResource;
-use App\Http\Resources\ProjectResource;
+use App\Http\Resources\{
+    ProjectCollectionResource,
+    ProjectResource,
+};
+use App\Traits\ProjectTrait;
 use App\Models\User;
 
 class ProjectController extends Controller
 {
+    use ProjectTrait;
+
     protected $user;
 
     public function __construct()
@@ -42,20 +47,7 @@ class ProjectController extends Controller
      */
     public function show(int $id)
     {
-        if (!$project = $this->user->projects()->find($id)) {
-            return response()->json(
-                [
-                    'errors' =>
-                    [
-                        'project' =>
-                        [
-                            "No project found with ID {$id} for the current user."
-                        ],
-                    ]
-                ],
-                404
-            );
-        }
+        $project = $this->getProject($this->user, $id);
 
         return new ProjectResource($project->load("tasks"));
     }
@@ -65,20 +57,7 @@ class ProjectController extends Controller
      */
     public function update(ProjectRequest $request, int $id)
     {
-        if (!$project = $this->user->projects()->find($id)) {
-            return response()->json(
-                [
-                    'errors' =>
-                    [
-                        'project' =>
-                        [
-                            "No project found with ID {$id} for the current user."
-                        ],
-                    ]
-                ],
-                404
-            );
-        }
+        $project = $this->getProject($this->user, $id);
 
         $project->update($request->all());
 
@@ -93,26 +72,13 @@ class ProjectController extends Controller
      */
     public function destroy(int $id)
     {
-        if (!$project = $this->user->projects()->find($id)) {
-            return response()->json(
-                [
-                    'errors' =>
-                    [
-                        'project' =>
-                        [
-                            "No project found with ID {$id} for the current user."
-                        ],
-                    ]
-                ],
-                404
-            );
-        }
+        $project = $this->getProject($this->user, $id);
 
         $project->delete();
 
         return response()->json(
             ['message' => 'Successfully delete project'],
-            201
+            204
         );
     }
 }

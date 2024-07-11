@@ -6,9 +6,16 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\TaskRequest;
 use App\Http\Resources\TaskResource;
 use App\Models\User;
+use App\Traits\{
+    ProjectTrait,
+    TaskTrait,
+};
 
 class TaskController extends Controller
 {
+    use ProjectTrait;
+    use TaskTrait;
+    
     protected $user;
 
     public function __construct()
@@ -21,15 +28,20 @@ class TaskController extends Controller
      */
     public function index(int $project_id)
     {
-        return TaskResource::collection($this->user->projects->find($project_id)->tasks()->get());
+        $project = $this->getProject($this->user, $project_id);
+
+        return TaskResource::collection($project->tasks);
     }
+
 
     /**
      * Store a newly created resource in storage.
      */
     public function store(TaskRequest $request, int $project_id)
     {
-        $this->user->projects->find($project_id)->tasks()->create($request->all());
+        $project = $this->getProject($this->user, $project_id);
+
+        $project->tasks()->create($request->all());
 
         return response()->json(
             ['message' => 'Successfully created tasks'],
@@ -42,20 +54,8 @@ class TaskController extends Controller
      */
     public function show(int $project_id, int $id)
     {
-        if (!$task = $this->user->projects->find($project_id)->tasks()->find($id)) {
-            return response()->json(
-                [
-                    'errors' =>
-                    [
-                        'task' =>
-                        [
-                            "No task found with ID {$id} for the current project."
-                        ],
-                    ]
-                ],
-                404
-            );
-        }
+        $project = $this->getProject($this->user, $project_id);
+        $task = $this->getTask($project, $id);
 
         return new TaskResource($task);
     }
@@ -65,20 +65,8 @@ class TaskController extends Controller
      */
     public function update(TaskRequest $request, int $project_id, int $id)
     {
-        if (!$task = $this->user->projects->find($project_id)->tasks()->find($id)) {
-            return response()->json(
-                [
-                    'errors' =>
-                    [
-                        'task' =>
-                        [
-                            "No task found with ID {$id} for the current project."
-                        ],
-                    ]
-                ],
-                404
-            );
-        }
+        $project = $this->getProject($this->user, $project_id);
+        $task = $this->getTask($project, $id);
 
         $task->update($request->all());
 
@@ -93,26 +81,14 @@ class TaskController extends Controller
      */
     public function destroy(int $project_id, int $id)
     {
-        if (!$task = $this->user->projects->find($project_id)->tasks()->find($id)) {
-            return response()->json(
-                [
-                    'errors' =>
-                    [
-                        'task' =>
-                        [
-                            "No task found with ID {$id} for the current project."
-                        ],
-                    ]
-                ],
-                404
-            );
-        }
+        $project = $this->getProject($this->user, $project_id);
+        $task = $this->getTask($project, $id);
 
         $task->delete();
 
         return response()->json(
             ['message' => 'Successfully delete tasks'],
-            201
+            204
         );
     }
 }
