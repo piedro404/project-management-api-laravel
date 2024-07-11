@@ -5,8 +5,8 @@ namespace App\Http\Controllers\v1;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\TokenRequest;
 use App\Http\Resources\TokenResource;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
+use App\Http\Resources\UserResource;
+use App\Models\User;
 
 class AuthController extends Controller
 {
@@ -33,10 +33,7 @@ class AuthController extends Controller
 
     public function me()
     {
-        return response()->json(
-            ['data' => auth('api')->user()],
-            200
-        );
+        return new UserResource(User::find(auth('api')->user()->id)->load('projects'));
     }
 
     public function logout()
