@@ -20,6 +20,7 @@ class ProjectResource extends JsonResource
         $tasks_pending = $this->filter_status(0, $tasks);
         $tasks_progress = $this->filter_status(1, $tasks);
         $tasks_concluded = $this->filter_status(2, $tasks);
+        $tasks_expired = $this->filter_expired($tasks);
 
         return [
             "id" => $this->id,
@@ -34,6 +35,7 @@ class ProjectResource extends JsonResource
             'tasks_pending' => TaskResource::collection($tasks_pending),
             'tasks_progress' => TaskResource::collection($tasks_progress),
             'tasks_concluded' => TaskResource::collection($tasks_concluded),
+            'tasks_expired' => TaskResource::collection($tasks_expired),
             "start_date_format" => $this->start_date ? [
                 "date" => Carbon::parse($this->start_date)->format('d/m/Y'),
                 "time" => Carbon::parse($this->start_date)->format('H:i'),
@@ -60,7 +62,14 @@ class ProjectResource extends JsonResource
     private function filter_status(int $status, $tasks)
     {
         return $tasks->filter(function ($task) use ($status) {
-            return $task->status == $status;
+            return $task->status == $status && !Carbon::parse($task->end_date)->isPast();
+        })->sortBy('end_date');
+    }
+
+    private function filter_expired($tasks)
+    {
+        return $tasks->filter(function ($task) {
+            return $task->status != 3 && Carbon::parse($task->end_date)->isPast();
         })->sortBy('end_date');
     }
 }
