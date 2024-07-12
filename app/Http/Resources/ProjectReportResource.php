@@ -23,6 +23,12 @@ class ProjectReportResource extends JsonResource
         $tasks_concluded = TaskFilter::filter_status(2, $tasks);
         $tasks_expired = TaskFilter::filter_expired($tasks);
 
+        $average_days_tasks_concluded = $tasks_concluded->map(function ($task) {
+            $created_at = Carbon::parse($task->created_at);
+            $concluded_at = Carbon::parse($task->concluded_at);
+            return $created_at->diffInMinutes($concluded_at);
+        })->avg();
+
         $tasks_created_month = TaskFilter::filter_month($tasks, "created_at");
         $tasks_concluded_month = TaskFilter::filter_month($tasks, "concluded_at");
         $tasks_not_concluded_month = TaskFilter::filter_month(TaskFilter::filter_status(2, $tasks, true), "end_date");
@@ -68,6 +74,9 @@ class ProjectReportResource extends JsonResource
                     'tasks_created' => $tasks_created_month->count(),
                     'tasks_concluded' => $tasks_concluded_month->count(),
                     'tasks_not_concluded' => $tasks_not_concluded_month->count(),
+                ],
+                'average' => [
+                    'average_days_tasks_concluded' => $average_days_tasks_concluded,
                 ],
             ],
             "start_date_format" => $this->start_date ? [
