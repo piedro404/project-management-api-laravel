@@ -5,6 +5,7 @@ namespace App\Http\Resources;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use App\Filters\TaskFilter;
 
 class ProjectResource extends JsonResource
 {
@@ -17,10 +18,10 @@ class ProjectResource extends JsonResource
     {
         $tasks = $this->tasks;
 
-        $tasks_pending = $this->filter_status(0, $tasks);
-        $tasks_progress = $this->filter_status(1, $tasks);
-        $tasks_concluded = $this->filter_status(2, $tasks);
-        $tasks_expired = $this->filter_expired($tasks);
+        $tasks_pending = TaskFilter::filter_status(0, $tasks);
+        $tasks_progress = TaskFilter::filter_status(1, $tasks);
+        $tasks_concluded = TaskFilter::filter_status(2, $tasks);
+        $tasks_expired = TaskFilter::filter_expired($tasks);
 
         return [
             "id" => $this->id,
@@ -57,19 +58,5 @@ class ProjectResource extends JsonResource
                 "time" => Carbon::parse($this->updated_at)->format('H:i'),
             ],
         ];
-    }
-
-    private function filter_status(int $status, $tasks)
-    {
-        return $tasks->filter(function ($task) use ($status) {
-            return $task->status == $status && !Carbon::parse($task->end_date)->isPast();
-        })->sortBy('end_date');
-    }
-
-    private function filter_expired($tasks)
-    {
-        return $tasks->filter(function ($task) {
-            return $task->status != 3 && Carbon::parse($task->end_date)->isPast();
-        })->sortBy('end_date');
     }
 }
