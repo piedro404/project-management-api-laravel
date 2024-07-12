@@ -21,6 +21,7 @@ class UserResource extends JsonResource
             "email"=> $this->email,
             "created_at" => $this->created_at,
             "updated_at" => $this->updated_at,
+            "initial_name" => strtoupper(substr($this->name, 0, 1)),
             "projects_count" => $this->projects->count(),
             "created_at_format" => [
                 "date" => Carbon::parse($this->created_at)->format('d/m/Y'),
