@@ -4,6 +4,7 @@ namespace App\Http\Resources;
 
 use Carbon\Carbon;
 use Illuminate\Http\Resources\Json\JsonResource;
+use App\Filters\TaskFilter;
 
 class ProjectReportResource extends JsonResource
 {
@@ -17,10 +18,15 @@ class ProjectReportResource extends JsonResource
     {
         $tasks = $this->tasks;
 
-        $tasks_pending = $this->filter_status(0, $tasks);
-        $tasks_progress = $this->filter_status(1, $tasks);
-        $tasks_concluded = $this->filter_status(2, $tasks);
-        $tasks_expired = $this->filter_expired($tasks);
+        $tasks_pending = TaskFilter::filter_status(0, $tasks);
+        $tasks_progress = TaskFilter::filter_status(1, $tasks);
+        $tasks_concluded = TaskFilter::filter_status(2, $tasks);
+        $tasks_expired = TaskFilter::filter_expired($tasks);
+
+        $tasks_created_month = TaskFilter::filter_month($tasks, "created_at");
+        $tasks_concluded_month = TaskFilter::filter_month($tasks, "concluded_at");
+        $tasks_not_concluded_month = TaskFilter::filter_month(TaskFilter::filter_status(2, $tasks, true), "end_date");
+
         $total_number_tasks = [
             'tasks' => $this->tasks->count(),
             'tasks_pending' => $tasks_pending->count(),
@@ -58,6 +64,11 @@ class ProjectReportResource extends JsonResource
                     'tasks_expired' => round(($total_number_tasks['tasks_expired'] / $total_number_tasks['tasks']) * 100, 2),
                     'tasks_concluded' => round(($total_number_tasks['tasks_concluded'] / $total_number_tasks['tasks']) * 100, 2),
                 ],
+                'current_month' => [
+                    'tasks_created' => $tasks_created_month->count(),
+                    'tasks_concluded' => $tasks_concluded_month->count(),
+                    'tasks_not_concluded' => $tasks_not_concluded_month->count(),
+                ],
             ],
             "start_date_format" => $this->start_date ? [
                 "date" => Carbon::parse($this->start_date)->format('d/m/Y'),
@@ -80,19 +91,5 @@ class ProjectReportResource extends JsonResource
                 "time" => Carbon::parse($this->updated_at)->format('H:i'),
             ],
         ];
-    }
-
-    private function filter_status(int $status, $tasks)
-    {
-        return $tasks->filter(function ($task) use ($status) {
-            return $task->status == $status && !Carbon::parse($task->end_date)->isPast();
-        })->sortBy('end_date');
-    }
-
-    private function filter_expired($tasks)
-    {
-        return $tasks->filter(function ($task) {
-            return $task->status != 3 && Carbon::parse($task->end_date)->isPast();
-        })->sortBy('end_date');
     }
 }
