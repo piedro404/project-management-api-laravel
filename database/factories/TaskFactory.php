@@ -23,6 +23,7 @@ class TaskFactory extends Factory
             'title' => $this->faker->sentence(3),
             'description' => $this->faker->paragraph(1),
             'status' => $status,
+            'concluded_at' => $status == 2 ? $this->faker->dateTimeBetween(now(), now()->addDays(7)) : null,
             'start_date' => now(),
             'end_date'=> now()->addDays(7),
         ];

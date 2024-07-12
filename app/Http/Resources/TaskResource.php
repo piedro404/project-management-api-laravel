@@ -25,6 +25,7 @@ class TaskResource extends JsonResource
             "status" => $this->status,
             "start_date" => $this->start_date,
             "end_date" => $this->end_date,
+            "concluded_at" => $this->concluded_at,
             "created_at" => $this->created_at,
             "updated_at" => $this->updated_at,
             "status_description" => $status[$this->status],
@@ -37,9 +38,13 @@ class TaskResource extends JsonResource
                 "time" => Carbon::parse($this->end_date)->format('H:i'),
             ] : null,
             "term" => $this->end_date ?
-                ($this->status == 2 ? "Concluído" : (Carbon::parse($this->end_date)->isPast() ? "Expirado"
+                ($this->status == 2 ? "Concluído " . Carbon::parse($this->concluded_at)->diffForHumans() : (Carbon::parse($this->end_date)->isPast() ? "Expirado"
                         : "Termina " . Carbon::parse($this->end_date)->diffForHumans()))
                 : null,
+            "concluded_at_format" => $this->concluded_at ? [
+                "date" => Carbon::parse($this->concluded_at)->format('d/m/Y'),
+                "time" => Carbon::parse($this->concluded_at)->format('H:i'),
+            ] : null,
             "created_at_format" => [
                 "date" => Carbon::parse($this->created_at)->format('d/m/Y'),
                 "time" => Carbon::parse($this->created_at)->format('H:i'),

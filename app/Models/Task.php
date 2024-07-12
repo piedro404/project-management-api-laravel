@@ -14,8 +14,13 @@ class Task extends Model
         'title',
         'description',
         'status',
+        'concluded_at',
         'start_date',
         'end_date',
+    ];
+
+    protected $dates = [
+        'concluded_at',
     ];
 
     // User
@@ -36,5 +41,19 @@ class Task extends Model
     public function scopeSearchStatus($query, int $status)
     {
         return $query->where('status', $status)->orderBy('end_date','asc');
+    }
+
+    // Boots
+    public static function boot()
+    {
+        parent::boot();
+
+        static::saving(function ($task) {
+            if ($task->isDirty('status') && $task->status == 2) {
+                $task->concluded_at = now();
+            } else {
+                $task->concluded_at = null;
+            }
+        });
     }
 }
