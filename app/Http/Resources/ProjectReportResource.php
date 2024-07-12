@@ -26,7 +26,7 @@ class ProjectReportResource extends JsonResource
         $average_days_tasks_concluded = $tasks_concluded->map(function ($task) {
             $created_at = Carbon::parse($task->created_at);
             $concluded_at = Carbon::parse($task->concluded_at);
-            return $created_at->diffInMinutes($concluded_at);
+            return $created_at->diffInDays($concluded_at);
         })->avg();
 
         $tasks_created_month = TaskFilter::filter_month($tasks, "created_at");
