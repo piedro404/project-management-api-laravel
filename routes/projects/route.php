@@ -13,6 +13,7 @@ Route::prefix('projects')->group(function () {
     Route::post('/', [ProjectController::class, 'store'])->name('project.store');
     Route::put('/{id}', [ProjectController::class, 'update'])->name('project.update');
     Route::delete('/{id}', [ProjectController::class, 'destroy'])->name('project.destroy');
+    Route::get('/{id}/report', [ProjectController::class, 'report'])->name('project.report');
 
     Route::prefix('{project_id}/tasks')->group(function () {
         Route::get('/', [TaskController::class, 'index'])->name('task.index');

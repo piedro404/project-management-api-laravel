@@ -8,6 +8,7 @@ use App\Http\Resources\{
     ProjectCollectionResource,
     ProjectResource,
 };
+use App\Http\Resources\ProjectReportResource;
 use App\Traits\ProjectTrait;
 
 class ProjectController extends AuthenticatedController
@@ -40,9 +41,12 @@ class ProjectController extends AuthenticatedController
      */
     public function show(int $id)
     {
-        $project = $this->getProject($this->user, $id);
+        $project = $this->getProject($this->user, $id)->load('tasks');
 
-        return new ProjectResource($project->load("tasks"));
+        return response()->json(
+            new ProjectResource($project),
+            200
+        );
     }
 
     /**
@@ -72,6 +76,16 @@ class ProjectController extends AuthenticatedController
         return response()->json(
             ['message' => 'Successfully delete project'],
             204
+        );
+    }
+
+    public function report(int $id)
+    {
+        $project = $this->getProject($this->user, $id)->load('tasks')->load('user');
+
+        return response()->json(
+            new ProjectReportResource($project),
+            200
         );
     }
 }
