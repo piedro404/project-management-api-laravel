@@ -6,9 +6,9 @@ This is a Project Management API built with Laravel, providing endpoints for man
 - [📖 Overview](#-overview)
 - [🔗 Resources](#-resources)
 - [🛠 Technologies](#-technologies)
-- [⚙️ Setup](#-setup)
+- [⚙️ Setup](#%EF%B8%8F-setup)
   - [📋 Prerequisites](#-prerequisites)
-  - [⬇️ Installation](#-installation)
+  - [⬇️ Installation](#%EF%B8%8F-installation)
   - [🚀 Running Locally](#-running-locally)
 - [📑 API Documentation](#-api-documentation)
 
