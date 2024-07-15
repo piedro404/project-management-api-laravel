@@ -11,7 +11,7 @@ This is a Project Management API built with Laravel, providing endpoints for man
   - [⬇️ Installation](#%EF%B8%8F-installation)
   - [🚀 Running Locally](#-running-locally)
 - [📑 API Documentation](#-api-documentation)
-- [📒 Abount](#-about)
+- [📒 About](#-about)
   
 ## 📖 Overview 
 
