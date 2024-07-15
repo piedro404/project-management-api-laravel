@@ -60,7 +60,7 @@ class ProjectController extends AuthenticatedController
 
         return response()->json(
             ['message' => 'Successfully update project'],
-            201
+            200
         );
     }
 

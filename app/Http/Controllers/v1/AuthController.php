@@ -24,7 +24,7 @@ class AuthController extends Controller
         User::create($request->all());
 
         return response()->json(
-            ['message' => 'Successfully created user'],
+            ['message' => 'User registered successfully'],
             201
         );
     }
@@ -46,7 +46,7 @@ class AuthController extends Controller
 
         return response()->json(
             ['data' => new TokenResource($token)],
-            201
+            200
         );
     }
 
