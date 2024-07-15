@@ -118,7 +118,7 @@ The API documentation is defined using OpenAPI 3.0.0. You can view and interact 
 To view the API documentation:
 
 1. **Run the project locally as described above.**
-2. **Open your preferred OpenAPI/Swagger UI tool and import the `openapi.yaml` file located in the `docs` folder.**
+2. **Open your preferred OpenAPI/Swagger UI tool and import the `openapi.yaml` file located in the `docs` folder. Or open link "/" for acess localhost documentation Swagger in project**
 
 ---
 
