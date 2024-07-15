@@ -11,7 +11,8 @@ This is a Project Management API built with Laravel, providing endpoints for man
   - [⬇️ Installation](#%EF%B8%8F-installation)
   - [🚀 Running Locally](#-running-locally)
 - [📑 API Documentation](#-api-documentation)
-
+- [📒 Abount](#-about)
+  
 ## 📖 Overview 
 
 The Project Management API allows users to register, log in, manage their profile, and perform CRUD operations on projects and tasks. Authentication is managed using JWT tokens.
@@ -123,3 +124,6 @@ To view the API documentation:
 ---
 
 Feel free to update any placeholders like the repository URL and additional instructions specific to your project environment.
+
+# 📒 About
+Thank you all, I wish you great studies, if you want, get in touch at pedro.henrique.martins404@gmail.com;
