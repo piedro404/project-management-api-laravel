@@ -29,7 +29,7 @@ RUN mkdir -p /home/$user/.composer && \
     chown -R $user:$user /home/$user
 
 RUN mkdir -p storage/public/usersAvatar && chmod -R gu+w storage/public/usersAvatar && \
-    chmod -R gu+w storage 
+    chmod -R gu+w storage
 
 # Install redis
 RUN pecl install -o -f redis \
@@ -42,4 +42,20 @@ WORKDIR /var/www
 # Copy custom configurations PHP
 COPY docker/php/custom.ini /usr/local/etc/php/conf.d/custom.ini
 
+# Expose port 80
+EXPOSE 80
+
+# Use root user for final setup
+USER root
+
+# Install supervisor
+RUN apt-get update && apt-get install -y supervisor
+
+# Copy supervisord.conf
+COPY docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+
+# Change back to your user
 USER $user
+
+# Start supervisor
+CMD ["/usr/bin/supervisord"]
