@@ -48,8 +48,3 @@ EXPOSE 80
 # Use root user for final setup
 USER root
 
-# Change back to your user
-USER $user
-
-# Start supervisor
-CMD ["/usr/bin/supervisord"]
