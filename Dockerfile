@@ -48,12 +48,6 @@ EXPOSE 80
 # Use root user for final setup
 USER root
 
-# Install supervisor
-RUN apt-get update && apt-get install -y supervisor
-
-# Copy supervisord.conf
-COPY docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
-
 # Change back to your user
 USER $user
 
