@@ -1,34 +1,42 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <meta name="description" content="SwaggerUI" />
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <title>Project Management API</title>
+    <meta name="description" content="SwaggerUI" />
 
-        {{-- Icon --}}
-        <link rel="shortcut icon" href={{url('favicon.png')}} type="image/x-icon">
+    <title>Project Management API</title>
 
-        <!-- Fonts -->
-        <link rel="preconnect" href="https://fonts.bunny.net">
-        <link href="https://fonts.bunny.net/css?family=figtree:400,600&display=swap" rel="stylesheet" />
+    {{-- Icon --}}
+    <link rel="shortcut icon" href={{ url('favicon.png') }} type="image/x-icon">
 
-        
-        <!-- Styles -->
-        <link rel="stylesheet" href="https://unpkg.com/swagger-ui-dist@5.11.0/swagger-ui.css" />
-    </head>
-    <body class="antialiased">
-        <div id="swagger-ui"></div>
-        <script src="https://unpkg.com/swagger-ui-dist@5.11.0/swagger-ui-bundle.js" crossorigin></script>
-        <script>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.bunny.net">
+    <link href="https://fonts.bunny.net/css?family=figtree:400,600&display=swap" rel="stylesheet" />
+
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="https://unpkg.com/swagger-ui-dist@5.11.0/swagger-ui.css" />
+</head>
+
+<body class="antialiased">
+    <div id="swagger-ui"></div>
+    <script src="https://unpkg.com/swagger-ui-dist@5.11.0/swagger-ui-bundle.js" crossorigin></script>
+    <script>
         window.onload = () => {
+            const protocol = window.location.protocol;
+            const host = window.location.host;
+            const baseUrl = `${protocol}//${host}`;
+            const openApiUrl = `${baseUrl}/docs/openapi.yaml`;
+
             window.ui = SwaggerUIBundle({
-                url: '{{ url('docs/openapi.yaml') }}',
+                url: openApiUrl,
                 dom_id: '#swagger-ui',
             });
         };
-        </script>
-    </body>
+    </script>
+</body>
+
 </html>
